@@ -8,13 +8,19 @@ export enum UserRole {
     ADMIN = 'admin',
 }
 
+export enum UserLanguage {
+    EN = 'en',
+    FA = 'fa',
+    AR = 'ar',
+}
+
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column({ unique: true })
-    telegramId: string;
+    telegramId: string; // From Telegram
 
     @Column({ nullable: true })
     username: string;
