@@ -13,13 +13,17 @@ import { Consultation } from './entities/consultation.entity';
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
                 type: 'postgres',
-                host: 'localhost',
-                port: 5432,
-                username: 'telemed',
-                password: 'telemedpassword',
-                database: 'telemedbot',
+                host: configService.get<string>('POSTGRES_HOST') || 'localhost',
+                port: parseInt(configService.get<string>('POSTGRES_PORT') || '5432', 10),
+                username: configService.get<string>('POSTGRES_USER') || 'telemed',
+                password: configService.get<string>('POSTGRES_PASSWORD') || 'telemedpassword',
+                database: configService.get<string>('POSTGRES_DB') || 'telemedbot',
                 entities: [User, DoctorProfile, PatientProfile, Consultation],
-                synchronize: true, // Auto-create tables (Dev only)
+                synchronize: true,
+                ssl: configService.get<string>('POSTGRES_HOST') !== 'localhost',
+                extra: configService.get<string>('POSTGRES_HOST') !== 'localhost'
+                    ? { ssl: { rejectUnauthorized: false } }
+                    : undefined,
             }),
         }),
     ],
